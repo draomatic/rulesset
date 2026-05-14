@@ -202,10 +202,10 @@ rule-providers:
     path: ./rules/privacy.yaml
     interval: 86400
 
-  Hijacking:
+  Hijacking: 
     type: http
     behavior: domain
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Hijacking/Hijacking_Domain.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Hijacking/Hijacking.yaml
     path: ./rules/hijacking.yaml
     interval: 86400
 
@@ -262,20 +262,20 @@ rule-providers:
     type: http
     behavior: classical
     url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ProxyLite/ProxyLite.yaml
-    path: ./rules/proxy.yaml
+    path: ./rules/proxy.yaml 
     interval: 86400
 
   ChinaDomain:
     type: http
     behavior: classical
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaDomain/ChinaDomain.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/China/China_Domain.yaml
     path: ./rules/cn-domain.yaml
     interval: 86400
 
   ChinaIP:
-    type: http
+    type: http 
     behavior: ipcidr
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaIPs/ChinaIPs.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/ChinaIPs/ChinaIPs_IP.yaml
     path: ./rules/cn-ip.yaml
     interval: 86400
 
