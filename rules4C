@@ -86,12 +86,12 @@ dns:
 # ---------- Hosts ----------
 hosts:
   'dns.google': 0.0.0.0
-  'cloudflare-dns.com': 0.0.0.0
-  'mozilla.cloudflare-dns.com': 0.0.0.0
+  'cloudflare-dns.com': 0.0.0.0 
+  'mozilla.cloudflare-dns.com': 0.0.0.0 
   'dns.quad9.net': 0.0.0.0
 
 # ---------- 节点（自动注入） ----------
-proxies: []
+#proxies: []
 
 # ---------- 代理分组 ----------
 proxy-groups:
