@@ -7,7 +7,6 @@ unified-delay: true
 tcp-concurrent: true
 external-controller: 127.0.0.1:9090
 find-process-mode: strict
-global-client-fingerprint: chrome
 
 # ---------- 流量嗅探 ----------
 sniffer:
