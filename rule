@@ -1,0 +1,326 @@
+mode: rule
+log-level: info
+allow-lan: true
+mixed-port: 7890
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+external-controller: 127.0.0.1:9090
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+# ---------- 流量嗅探 ----------
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "+.push.apple.com"
+    - "+.apple.com"
+
+# ---------- DNS 配置 ----------
+dns:
+  enable: true
+  ipv6: false
+  prefer-h3: false
+  respect-rules: true
+  use-hosts: true
+  use-system-hosts: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "localhost.ptlogin2.qq.com"
+    - "+.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "+.xboxlive.com"
+    - "*.battlenet.com"
+    - "*.battlenet.com.cn"
+    - "+.wotgame.cn"
+    - "+.wggames.cn"
+    - "+.wowsgame.cn"
+    - "+.wargaming.net"
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://dns.google/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    geosite:
+      - gfw
+    ipcidr:
+      - 240.0.0.0/4
+      - 0.0.0.0/32
+    domain:
+      - '+.google.com'
+      - '+.facebook.com'
+      - '+.youtube.com'
+      - '+.twitter.com'
+      - '+.x.com'
+      - '+.openai.com'
+      - '+.anthropic.com'
+      - '+.grok.com'
+      - '+.x.ai'
+
+# ---------- Hosts ----------
+hosts:
+  'dns.google': 0.0.0.0
+  'cloudflare-dns.com': 0.0.0.0
+  'mozilla.cloudflare-dns.com': 0.0.0.0
+  'dns.quad9.net': 0.0.0.0
+
+# ---------- 代理分组 ----------
+proxy-groups:
+  - name: "🚀 节点选择"
+    type: select
+    include-all: true
+    proxies:
+      - "♻️ 自动选择"
+      - "🎯 故障转移"
+      - "🔯 手动选择"
+      - "DIRECT"
+
+  - name: "♻️ 自动选择"
+    type: url-test
+    include-all: true
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    lazy: true
+
+  - name: "🎯 故障转移"
+    type: fallback
+    include-all: true
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+
+  - name: "🔯 手动选择"
+    type: select
+    include-all: true
+
+  - name: "🤖 AI 服务"
+    type: select
+    include-all: true
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "DIRECT"
+
+  - name: "📺 国际媒体"
+    type: select
+    include-all: true
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "DIRECT"
+
+  - name: "📹 YouTube"
+    type: select
+    include-all: true
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "DIRECT"
+
+  - name: "📲 Telegram"
+    type: select
+    include-all: true
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "DIRECT"
+
+  - name: "🍎 Apple"
+    type: select
+    include-all: true
+    proxies:
+      - "DIRECT"
+      - "🚀 节点选择"
+
+  - name: "🌍 Google"
+    type: select
+    include-all: true
+    proxies:
+      - "🚀 节点选择"
+      - "DIRECT"
+
+  - name: "🛡️ 广告拦截"
+    type: select
+    proxies:
+      - "REJECT"
+      - "DIRECT"
+
+  - name: "🐟 漏网之鱼"
+    type: select
+    include-all: true
+    proxies:
+      - "🚀 节点选择"
+      - "DIRECT"
+
+# ---------- 规则集（修正：ios_rule_script，注意单数 rule 没有 s） ----------
+rule-providers:
+  RejectGlobal:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Advertising/Advertising_Domain.yaml
+    path: ./rules/reject-global.yaml
+    interval: 86400
+
+  RejectChina:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AdvertisingLite/AdvertisingLite_Domain.yaml
+    path: ./rules/reject-china.yaml
+    interval: 86400
+
+  Privacy:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Privacy/Privacy_Domain.yaml
+    path: ./rules/privacy.yaml
+    interval: 86400
+
+  Hijacking:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Hijacking/Hijacking_Domain.yaml
+    path: ./rules/hijacking.yaml
+    interval: 86400
+
+  OpenAI:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml
+    path: ./rules/openai.yaml
+    interval: 86400
+
+  Claude:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.yaml
+    path: ./rules/claude.yaml
+    interval: 86400
+
+  YouTube:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml
+    path: ./rules/youtube.yaml
+    interval: 86400
+
+  Streaming:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalMedia/GlobalMedia.yaml
+    path: ./rules/streaming.yaml
+    interval: 86400
+
+  Telegram:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.yaml
+    path: ./rules/telegram.yaml
+    interval: 86400
+
+  Apple:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.yaml
+    path: ./rules/apple.yaml
+    interval: 86400
+
+  Google:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.yaml
+    path: ./rules/google.yaml
+    interval: 86400
+
+  Proxy:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ProxyLite/ProxyLite.yaml
+    path: ./rules/proxy.yaml
+    interval: 86400
+
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaDomain/ChinaDomain.yaml
+    path: ./rules/cn-domain.yaml
+    interval: 86400
+
+  ChinaIP:
+    type: http
+    behavior: ipcidr
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaIPs/ChinaIPs.yaml
+    path: ./rules/cn-ip.yaml
+    interval: 86400
+
+# ---------- 规则 ----------
+rules:
+  # 1. 禁用 QUIC
+  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
+
+  # 2. 局域网直连
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,17.0.0.0/8,DIRECT,no-resolve
+
+  # 3. AI 服务关键字兜底
+  - DOMAIN-KEYWORD,openai,🤖 AI 服务
+  - DOMAIN-KEYWORD,chatgpt,🤖 AI 服务
+  - DOMAIN-KEYWORD,anthropic,🤖 AI 服务
+  - DOMAIN-KEYWORD,claude,🤖 AI 服务
+  - DOMAIN-KEYWORD,grok,🤖 AI 服务
+  - DOMAIN-SUFFIX,x.ai,🤖 AI 服务
+  - DOMAIN-SUFFIX,perplexity.ai,🤖 AI 服务
+  - DOMAIN-SUFFIX,pplx.ai,🤖 AI 服务
+
+  # 4. 广告/隐私/劫持拦截
+  - RULE-SET,RejectGlobal,🛡️ 广告拦截
+  - RULE-SET,RejectChina,🛡️ 广告拦截
+  - RULE-SET,Privacy,🛡️ 广告拦截
+  - RULE-SET,Hijacking,🛡️ 广告拦截
+
+  # 5. 应用分流
+  - RULE-SET,OpenAI,🤖 AI 服务
+  - RULE-SET,Claude,🤖 AI 服务
+  - RULE-SET,YouTube,📹 YouTube
+  - RULE-SET,Telegram,📲 Telegram
+  - RULE-SET,Streaming,📺 国际媒体
+  - RULE-SET,Apple,🍎 Apple
+  - RULE-SET,Google,🌍 Google
+  - RULE-SET,Proxy,🚀 节点选择
+
+  # 6. 国内直连
+  - RULE-SET,ChinaDomain,DIRECT
+  - RULE-SET,ChinaIP,DIRECT
+  - GEOIP,CN,DIRECT
+
+  # 7. 兜底
+  - MATCH,🐟 漏网之鱼
