@@ -125,7 +125,6 @@ proxy-groups:
     proxies:
       - "🚀 节点选择"
       - "♻️ 自动选择"
-      - "🔯 手动选择"
       - "DIRECT"
 
   - name: "📺 国际媒体"
@@ -179,7 +178,7 @@ proxy-groups:
       - "🚀 节点选择"
       - "DIRECT"
 
-# ---------- 规则集 ----------
+# ---------- 规则集（修正：ios_rule_script，注意单数 rule 没有 s） ----------
 rule-providers:
   RejectGlobal:
     type: http
@@ -202,10 +201,10 @@ rule-providers:
     path: ./rules/privacy.yaml
     interval: 86400
 
-  Hijacking: 
+  Hijacking:
     type: http
     behavior: domain
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Hijacking/Hijacking.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Hijacking/Hijacking_Domain.yaml
     path: ./rules/hijacking.yaml
     interval: 86400
 
@@ -262,20 +261,20 @@ rule-providers:
     type: http
     behavior: classical
     url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ProxyLite/ProxyLite.yaml
-    path: ./rules/proxy.yaml 
+    path: ./rules/proxy.yaml
     interval: 86400
 
   ChinaDomain:
     type: http
     behavior: classical
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/China/China_Domain.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaDomain/ChinaDomain.yaml
     path: ./rules/cn-domain.yaml
     interval: 86400
 
   ChinaIP:
-    type: http 
+    type: http
     behavior: ipcidr
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaIPs/ChinaIPs_IP.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaIPs/ChinaIPs.yaml
     path: ./rules/cn-ip.yaml
     interval: 86400
 
@@ -318,7 +317,7 @@ rules:
   - RULE-SET,Google,🌍 Google
   - RULE-SET,Proxy,🚀 节点选择
 
-  # 6. 直连
+  # 6. 国内直连
   - RULE-SET,ChinaDomain,DIRECT
   - RULE-SET,ChinaIP,DIRECT
   - GEOIP,CN,DIRECT
