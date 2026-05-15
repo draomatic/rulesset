@@ -63,24 +63,20 @@ dns:
   fallback:
     - https://1.1.1.1/dns-query
     - https://dns.google/dns-query
+
+  nameserver-policy:
+    "geosite:gfw,geolocation-!cn":
+      - https://1.1.1.1/dns-query
+      - https://dns.google/dns-query
+    "+.google.com,+.facebook.com,+.youtube.com,+.twitter.com,+.x.com,+.openai.com,+.anthropic.com,+.grok.com,+.x.ai":
+      - https://1.1.1.1/dns-query
+      - https://dns.google/dns-query
   fallback-filter:
     geoip: true
     geoip-code: CN
-    geosite:
-      - gfw
     ipcidr:
       - 240.0.0.0/4
       - 0.0.0.0/32
-    domain:
-      - '+.google.com'
-      - '+.facebook.com'
-      - '+.youtube.com'
-      - '+.twitter.com'
-      - '+.x.com'
-      - '+.openai.com'
-      - '+.anthropic.com'
-      - '+.grok.com'
-      - '+.x.ai'
 
 # ---------- Hosts ----------
 hosts:
@@ -288,7 +284,6 @@ rules:
   - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
   - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
   - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-  - IP-CIDR,17.0.0.0/8,DIRECT,no-resolve
 
   # 3. AI 服务关键字兜底
   - DOMAIN-KEYWORD,openai,🤖 AI 服务
